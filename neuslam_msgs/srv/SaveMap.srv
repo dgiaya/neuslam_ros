@@ -1,0 +1,6 @@
+# Empty: the node's output_dir with a timestamped subdirectory
+string directory
+---
+bool success
+string message
+string[] files

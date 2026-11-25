@@ -1,0 +1,5 @@
+repositories:
+  Dynamic_SLAM:
+    type: git
+    url: git@github.com:aniket-gupta1/Dynamic_SLAM.git
+    version: a780e1f357ee8696f7de7ef27300576604a20d29   # branch ros2

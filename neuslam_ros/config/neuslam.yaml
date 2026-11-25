@@ -1,0 +1,68 @@
+/**/neuslam:
+  ros__parameters:
+    mode: stereo                  # stereo, stereo_inertial, rgbd, rgbd_inertial, mono, mono_inertial
+    input:
+      rectified: false            # false: undistort and rectify from CameraInfo K, D, R, P
+      reliable: false             # true: reliable subscriptions (needs reliable publishers; no DDS drops)
+      sync_slop: 0.0              # s; 0 = identical stamps (hardware-triggered cameras)
+      sync_queue: 10
+      frame_stride: 1             # use every n-th synchronised frame
+      max_queue: 2                # frames waiting for NeuSLAM; more are dropped
+      imu_wait_s: 0.05            # wait for the IMU sample after a frame before submitting it
+    frames:
+      map: map
+      odom: odom
+      base: base_link
+    tf:
+      publish_map_odom: true
+      publish_odom_base: true     # false when an EKF or flight controller owns odom -> base_link
+      extrinsics_timeout_s: 2.0   # then base_link is assumed at the left camera
+    imu:
+      T_optical_imu: [0.0]        # 16 values (row-major left optical <- IMU), or from TF
+    odometry:
+      twist_frame: child          # child (REP-105) or parent
+      gravity_align: true         # inertial modes: odom z up from the first accelerometer samples
+    covariance:
+      pose: [0.01, 0.01, 0.01, 0.001, 0.001, 0.001]
+      twist: [0.05, 0.05, 0.05, 0.01, 0.01, 0.01]
+      lost_scale: 1000.0
+    depth:
+      keyframes: true             # ~/depth/image once per keyframe
+      every_n_frames: 0           # also the current stereo pair every n frames (one network pass each)
+      encoding: 32FC1             # 32FC1 (m) or 16UC1 (mm)
+      points: false               # ~/depth/points
+      points_stride: 4
+    map:
+      points_period_s: 2.0        # ~/map/points (when subscribed); 0 = off
+      max_points: 100000
+    path:
+      publish_every: 5
+      max_poses: 20000
+    debug:
+      image_rect: false           # ~/image_rect: the network's input image
+    preprocess:
+      device: cpu                 # cpu (OpenCV) or cuda
+      scale: 0.0                  # 0: scale the rectified image to the network width
+    neuslam:
+      config: ""                  # bundled NeuSLAM config, NeuSLAM YAML or overlay YAML; "" = by mode
+      overrides: [""]             # NeuSLAM KEY=VALUE
+      models_dir: ""              # "" = $NEUSLAM_MODELS or the package's models/
+      backend: tensorrt
+      multiprocess: true
+      queue_size: 2
+      build_engines: true
+    output_dir: ""                # NeuSLAM outputs and timing.csv on shutdown; "" = none
+
+/**/neuslam_voxels:
+  ros__parameters:
+    frame: odom
+    base_frame: base_link
+    resolution: 0.2
+    z_resolution: 0.25
+    size_x: 200
+    size_y: 200
+    size_z: 16
+    max_range: 15.0
+    ray_stride: 8
+    publish_rate_hz: 2.0
+    points: false

@@ -1,0 +1,23 @@
+# MAVericks: PX4 (px4_ros2_interface) owns uav1/map -> uav1/odom -> uav1/base_link, so no TF from here.
+# ~/odom can feed PX4 EKF2 through px4_ros2_interface's vio/in, which takes a world-frame twist.
+/**/neuslam:
+  ros__parameters:
+    mode: stereo
+    input:
+      rectified: false
+      reliable: true              # MAVericks cameras publish reliably
+    frames:
+      map: uav1/neuslam_map
+      odom: uav1/neuslam_odom
+      base: uav1/base_link
+    tf:
+      publish_map_odom: false
+      publish_odom_base: false
+    odometry:
+      twist_frame: parent
+    output_dir: ~/neuslam_runs
+
+/**/neuslam_voxels:
+  ros__parameters:
+    frame: uav1/odom
+    base_frame: uav1/base_link

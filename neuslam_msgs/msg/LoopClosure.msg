@@ -1,0 +1,5 @@
+std_msgs/Header header
+uint64 query_keyframe_id
+uint64 match_keyframe_id
+geometry_msgs/Transform map_to_odom
+uint32 num_poses_revised
