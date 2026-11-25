@@ -10,7 +10,7 @@ voxel grid around the vehicle are published for obstacle avoidance.
 | `neuslam_msgs` | `Status`, `LoopClosure`, `SaveMap` |
 
 NeuSLAM itself is a Python package, installed separately at the version in [`neuslam.repos`](neuslam.repos)
-(its `ros2` branch).
+(its `ros2` branch). A release archive carries that version in `neuslam/`, which `docker/build.sh` uses.
 
 ## Interfaces
 
